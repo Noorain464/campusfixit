@@ -25,6 +25,13 @@ app.use('/api/auth/', authRoutes)
 
 app.use("/api/issues/", issueRoutes);
 
+// Global error handler to ensure JSON responses for errors (including multer errors)
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err && err.message ? err.message : err);
+    const status = err && err.status ? err.status : 500;
+    res.status(status).json({ message: err && err.message ? err.message : "Server error" });
+});
+
 
 app.listen(3000, () => {
     console.log("server Started")

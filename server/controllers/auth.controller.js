@@ -1,6 +1,6 @@
-import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
@@ -67,5 +67,16 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
+  }
+};
+
+// Get current user (protected)
+export const me = async (req, res) => {
+  try {
+    if (!req.user) return res.status(401).json({ message: "Not authorized" });
+
+    return res.json({ user: req.user });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to get user" });
   }
 };
