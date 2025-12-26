@@ -93,8 +93,8 @@ export default function CreateIssueScreen() {
             key={cat}
             onPress={() => setCategory(cat)}
             className={`px-4 py-2 mr-2 mb-2 rounded-full ${category === cat
-                ? "bg-blue-600"
-                : "bg-white border border-gray-300"
+              ? "bg-blue-600"
+              : "bg-white border border-gray-300"
               }`}
           >
             <Text

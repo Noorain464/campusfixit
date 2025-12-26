@@ -24,10 +24,9 @@ export default function SignupScreen() {
 
       const response = await authApi.signup(name, email, password);
 
-      // Expected backend response: { token, user }
       await saveToken(response.token);
 
-      router.replace("/(tabs)");
+      router.replace("/login");
     } catch (err) {
       setError("Signup failed");
     } finally {

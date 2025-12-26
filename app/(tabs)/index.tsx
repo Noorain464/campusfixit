@@ -86,7 +86,7 @@ export default function HomeScreen() {
       });
       Alert.alert("Success", `Issue marked as ${newStatus}`);
       setAdminRemark("");
-      loadData(); // Refresh the list
+      loadData();
     } catch (error) {
       Alert.alert("Error", "Failed to update status");
     }

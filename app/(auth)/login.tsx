@@ -22,8 +22,6 @@ export default function LoginScreen() {
       setError("");
 
       const response = await authApi.login(email, password);
-
-      // Expected backend response: { token, user }
       await saveToken(response.token);
 
       router.replace("/(tabs)");

@@ -1,18 +1,23 @@
-import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import { View, Text, TouchableOpacity, SafeAreaView, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 
 export default function ProfileScreen() {
-  const { user, logout } = useAuth();
+
+  const { user, logout, loading } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
     await logout();
-    // Use imperative routing to return to login
+
     router.replace("/login");
   };
+  if (loading) return <ActivityIndicator size="large" className="mt-20" />;
+  if (!user) return <Text className="text-center mt-20">Please login again</Text>;
+
 
   return (
+
     <SafeAreaView className="flex-1 bg-white">
       <View className="p-6">
         <Text className="text-3xl font-bold mb-8">Profile</Text>

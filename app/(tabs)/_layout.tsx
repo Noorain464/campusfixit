@@ -22,11 +22,10 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Hidden Create Tab (accessible via router.push) */}
       <Tabs.Screen
         name="create"
         options={{
-          href: null, // This hides it from the bottom bar
+          href: null,
           title: "Report Issue",
         }}
       />
