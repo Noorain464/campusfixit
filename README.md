@@ -1,50 +1,123 @@
-# Welcome to your Expo app 👋
+# CampusFixIt
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+CampusFixIt is a small mobile/web app (built with Expo + React Native) paired with an Express + MongoDB backend API. It lets users (students) create and manage campus issues and lets administrators view and update issue status.
 
-## Get started
+## Contents
 
-1. Install dependencies
+- `app/` — Expo Router app (TypeScript + React Native + Nativewind)
+- `app-example/` — Starter/example app preserved from scaffolding
+- `server/` — Express API, MongoDB models, controllers, and routes
+- `assets/` — Images and static assets
+- `utils/api.js` — client helper for API calls
 
-   ```bash
-   npm install
-   ```
+## Quick start
 
-2. Start the app
+Prerequisites:
 
-   ```bash
-   npx expo start
-   ```
+- Node.js (>=16)
+- npm
+- For iOS simulator: Xcode (macOS)
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. Install root dependencies (client):
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install server dependencies:
 
-## Learn more
+```bash
+cd server
+npm install
+cd ..
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Run the backend (from `server/`):
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+cd server
+# development with auto-reload
+npm run dev
+# or in production
+npm start
+```
 
-## Join the community
+The API will listen on port `3000` by default.
 
-Join our community of developers creating universal apps.
+4. Run the Expo app (from project root):
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npm start
+```
+
+Open the project in Expo Go, an emulator, or a development build. For Android emulator or iOS simulator use `npm run android` / `npm run ios`.
+
+## Environment (server)
+
+Create a `.env` file in `server/` with at least:
+
+```
+MONGODB_URI=<your-mongodb-connection-string>
+JWT_SECRET=<a-strong-secret>
+```
+
+The server currently reads `MONGODB_URI` and `JWT_SECRET` from the environment.
+
+## API overview
+
+Base URL: `http://localhost:3000/api`
+
+Auth:
+
+- POST `/auth/register` — Register a new user. Body: `{ name, email, password }`.
+- POST `/auth/login` — Login. Body: `{ email, password }`. Returns a JWT token.
+- GET `/auth/me` — Protected. Returns current user. Send `Authorization: Bearer <token>` header.
+
+Issues:
+
+- POST `/issues/` — Create issue (student). Protected. Form data: `title`, `description`, `category`, optional `image` (multipart).
+- GET `/issues/my` — Get issues created by the authenticated user. Protected.
+- GET `/issues/` — Admin only: list all issues.
+- PATCH `/issues/:id` — Admin only: update status/remarks of an issue. Body: `{ status, remarks }`.
+
+Authentication: use the `Authorization` header with a Bearer token returned on login/register.
+
+Error handling: the server returns JSON { message } on errors and logs unhandled errors to the console.
+
+## Notable implementation details
+
+- Images uploaded via `multer` are stored under `server/uploads/` by default (see `server/middleware/upload.js`).
+- Database connection is handled in `server/config/dbconfig.js` using `process.env.MONGODB_URI`.
+- JWT secret is read from `process.env.JWT_SECRET` in `server/controllers/auth.controller.js`.
+
+## Development notes
+
+- The Expo app uses file-based routing in `app/` (see `app/(tabs)`, `app/(auth)` etc.).
+- Example starter code is preserved in `app-example/`.
+- To reset the project starter files, run `npm run reset-project`.
+
+## Folder reference
+
+- `app/` — mobile/web app source
+- `server/` — API source
+  - `server/models/` — Mongoose models (`user.model.js`, `issue.model.js`)
+  - `server/controllers/` — request handlers
+  - `server/routes/` — Express routes
+  - `server/middleware/` — auth, admin check, upload
+
+## Testing & next steps
+
+- Seed data / test users: create via `/auth/register` or add seeding script.
+- Consider making `PORT` configurable in `server/index.js` and reading it from `.env`.
+
+## Contributing
+
+PRs and issues welcome. If adding features, include tests and update this README with required env/config changes.
+
+## License
+
+This repository does not include a license file. Add one if you intend to open-source the project.
+
+---
+
+File: [README_FULL.md](README_FULL.md)
