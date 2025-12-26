@@ -1,12 +1,13 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { 
-  ActivityIndicator, 
-  FlatList, 
-  Text, 
-  TouchableOpacity, 
-  View, 
-  ScrollView, 
+import { RefreshControl } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
   Alert,
   TextInput
 } from "react-native";
@@ -33,15 +34,22 @@ const categories = ["All", "Electrical", "Water", "Internet", "Infrastructure"];
 const statuses = ["All", "Open", "In Progress", "Resolved"];
 
 export default function HomeScreen() {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadData();
+    setRefreshing(false);
+  };
   const router = useRouter();
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  
+
   // Filtering State
   const [selectedCat, setSelectedCat] = useState("All");
   const [selectedStatus, setSelectedStatus] = useState("All");
-  
+
   // Admin Update State
   const [adminRemark, setAdminRemark] = useState("");
 
@@ -72,9 +80,9 @@ export default function HomeScreen() {
 
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      await issueApi.updateStatus(id, { 
-        status: newStatus, 
-        remarks: adminRemark || "Status updated by admin" 
+      await issueApi.updateStatus(id, {
+        status: newStatus,
+        remarks: adminRemark || "Status updated by admin"
       });
       Alert.alert("Success", `Issue marked as ${newStatus}`);
       setAdminRemark("");
@@ -133,8 +141,8 @@ export default function HomeScreen() {
         <Text className="text-xs font-bold text-gray-400 uppercase mb-2">Filter Category</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row mb-3">
           {categories.map(cat => (
-            <TouchableOpacity 
-              key={cat} 
+            <TouchableOpacity
+              key={cat}
               onPress={() => setSelectedCat(cat)}
               className={`px-4 py-1.5 rounded-full mr-2 border ${selectedCat === cat ? 'bg-black border-black' : 'bg-white border-gray-300'}`}
             >
@@ -146,8 +154,8 @@ export default function HomeScreen() {
         <Text className="text-xs font-bold text-gray-400 uppercase mb-2">Filter Status</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
           {statuses.map(status => (
-            <TouchableOpacity 
-              key={status} 
+            <TouchableOpacity
+              key={status}
               onPress={() => setSelectedStatus(status)}
               className={`px-4 py-1.5 rounded-full mr-2 border ${selectedStatus === status ? 'bg-blue-600 border-blue-600' : 'bg-white border-gray-300'}`}
             >
@@ -160,6 +168,9 @@ export default function HomeScreen() {
       {/* Issues List */}
       <FlatList
         data={filteredIssues}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         keyExtractor={(item) => item._id}
         ListEmptyComponent={<Text className="text-center text-gray-400 mt-10">No issues matching filters</Text>}
         renderItem={({ item }) => (
@@ -171,9 +182,9 @@ export default function HomeScreen() {
               </View>
               {renderStatusBadge(item.status)}
             </View>
-            
+
             <Text className="text-gray-600 leading-5">{item.description}</Text>
-            
+
             {item.remarks && (
               <View className="mt-3 p-2 bg-blue-50 rounded-lg">
                 <Text className="text-blue-800 text-xs italic">Admin Remark: {item.remarks}</Text>
@@ -193,13 +204,13 @@ export default function HomeScreen() {
                   onChangeText={setAdminRemark}
                 />
                 <View className="flex-row">
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => handleUpdateStatus(item._id, "In Progress")}
                     className="bg-yellow-500 px-4 py-2 rounded-lg mr-2"
                   >
                     <Text className="text-white text-xs font-bold">In Progress</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => handleUpdateStatus(item._id, "Resolved")}
                     className="bg-green-600 px-4 py-2 rounded-lg"
                   >

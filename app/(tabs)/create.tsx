@@ -40,17 +40,17 @@ export default function CreateIssueScreen() {
       setLoading(true);
 
       const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("category", category);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category", category);
 
-    if (image) {
-      const filename = image.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename || '');
-      const type = match ? `image/${match[1]}` : `image`;
-      // @ts-ignore
-      formData.append("image", { uri: image, name: filename, type });
-    }
+      if (image) {
+        const filename = image.split('/').pop();
+        const match = /\.(\w+)$/.exec(filename || '');
+        const type = match ? `image/${match[1]}` : `image`;
+        // @ts-ignore
+        formData.append("image", { uri: image, name: filename, type });
+      }
       await issueApi.createIssue(formData);
 
       Alert.alert("Success", "Issue created successfully");
@@ -92,16 +92,14 @@ export default function CreateIssueScreen() {
           <TouchableOpacity
             key={cat}
             onPress={() => setCategory(cat)}
-            className={`px-4 py-2 mr-2 mb-2 rounded-full ${
-              category === cat
+            className={`px-4 py-2 mr-2 mb-2 rounded-full ${category === cat
                 ? "bg-blue-600"
                 : "bg-white border border-gray-300"
-            }`}
+              }`}
           >
             <Text
-              className={`${
-                category === cat ? "text-white" : "text-gray-700"
-              }`}
+              className={`${category === cat ? "text-white" : "text-gray-700"
+                }`}
             >
               {cat}
             </Text>

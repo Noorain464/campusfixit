@@ -16,7 +16,7 @@ export default function ProfileScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <View className="p-6">
         <Text className="text-3xl font-bold mb-8">Profile</Text>
-        
+
         <View className="bg-gray-50 p-6 rounded-2xl mb-6">
           <View className="mb-4">
             <Text className="text-gray-400 text-xs uppercase font-bold">Name</Text>
@@ -34,7 +34,7 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={handleLogout}
           className="bg-red-500 py-4 rounded-xl shadow-sm"
         >
