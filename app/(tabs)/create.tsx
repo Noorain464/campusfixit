@@ -2,6 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { issueApi } from "../../utils/api";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
 
 const categories = [
   "Electrical",
@@ -54,10 +55,7 @@ export default function CreateIssueScreen() {
 
       Alert.alert("Success", "Issue created successfully");
 
-      // reset form
-      setTitle("");
-      setDescription("");
-      setCategory(null);
+      router.replace("/(tabs)");
     } catch (error: any) {
       Alert.alert("Error", error.message || "Something went wrong");
     } finally {
