@@ -5,9 +5,7 @@ CampusFixIt is a small mobile/web app (built with Expo + React Native) paired wi
 ## Contents
 
 - `app/` — Expo Router app (TypeScript + React Native + Nativewind)
-- `app-example/` — Starter/example app preserved from scaffolding
 - `server/` — Express API, MongoDB models, controllers, and routes
-- `assets/` — Images and static assets
 - `utils/api.js` — client helper for API calls
 
 ## Quick start
@@ -39,7 +37,7 @@ cd server
 # development with auto-reload
 npm run dev
 # or in production
-npm start
+npm expo start
 ```
 
 The API will listen on port `3000` by default.
@@ -120,4 +118,3 @@ This repository does not include a license file. Add one if you intend to open-s
 
 ---
 
-File: [README_FULL.md](README_FULL.md)
